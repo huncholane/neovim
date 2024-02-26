@@ -13,13 +13,24 @@ set shiftwidth=4
 set tabstop=4
 set encoding=utf8
 set history=5000
-set clipboard=unnamedplus
+colorscheme habamax
+highlight Normal ctermbg=none " Remove background color
+:au FocusLost * :wa " Auto save when focus is lost
+:au BufLeave * :wa " Auto save when buffer is left
+vnoremap p "0p " Keep last register after pasting in visual mode
+nmap <leader>f gg=G <C-o> <C-o>
+nmap <leader>t :Telescope find_files<CR>
+set autoread
+nmap gn :bnext<CR>
+nmap gp :bprevious<CR>
+nmap gq :bd<CR> :bn<CR> :NERDTreeFind<CR><CR>
 
 
 " Vim-Plug settings
 call plug#begin()
 Plug 'preservim/nerdtree' |
-    \ Plug 'Xuyuanp/nerdtree-git-plugin'
+            \ Plug 'Xuyuanp/nerdtree-git-plugin' |
+            \ Plug 'ryanoasis/vim-devicons' 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'github/copilot.vim'
 Plug 'vim-airline/vim-airline-themes'
@@ -27,8 +38,15 @@ Plug 'tpope/vim-commentary'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.5' }
 Plug 'akinsho/toggleterm.nvim',
-Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline',
+Plug 'tpope/vim-fugitive',
+Plug 'rbong/vim-flog',
+Plug 'tpope/vim-capslock',
+Plug 'Shougo/denite.nvim',
+Plug 'junegunn/fzf',
+Plug 'prabirshrestha/vim-lsp',
 call plug#end()
+
 
 " NERDTree settings
 nnoremap <leader>n :NERDTreeFocus<CR>
@@ -46,32 +64,34 @@ nnoremap <silent> <space>d :<C-u>CocList diagnostics<cr>
 nmap <leader>do <Plug>(coc-codeaction)
 nmap <leader>rn <Plug>(coc-rename)
 let g:coc_global_extensions = [
-  \ 'coc-tsserver',
-  \ 'coc-json',
-  \ 'coc-css',
-  \ 'coc-eslint',
-  \ 'coc-prettier',
-  \ 'coc-pyright'
-  \ ]
+            \ 'coc-tsserver',
+            \ 'coc-json',
+            \ 'coc-css',
+            \ 'coc-eslint',
+            \ 'coc-prettier',
+            \ 'coc-pyright'
+            \ ]
 " Make <CR> to accept selected completion item or notify coc.nvim to format
 " <C-g>u breaks current undo, please make your own choice
 inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+            \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 
 " Airline settings
-autocmd VimEnter * AirlineTheme bubblegum
 set laststatus=2
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#capslock#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline_statusline_ontop=0
-let g:airline_theme='ayu_light'
+let g:airline_theme='bubblegum'
 let g:airline#extensions#tabline#formatter = 'default'
 set guifont=Hack
 
 
 " Toggleterm settings
 lua require("toggleterm").setup({
-    \ direction = 'float',
-    \ open_mapping = [[<c-\>]],
-  \ })
+            \ direction = 'float',
+            \ open_mapping = [[<c-\>]],
+            \ })
+
+
